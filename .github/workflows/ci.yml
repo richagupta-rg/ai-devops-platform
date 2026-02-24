@@ -26,3 +26,5 @@ jobs:
       - name: Run basic import test
         run: |
           python -c "import fastapi; print('FastAPI OK')"
+
+
