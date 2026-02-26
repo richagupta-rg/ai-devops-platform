@@ -1,3 +1,5 @@
 fastapi #backend framework
 uvicorn #ASGI server (runs FastAPI)
 python-multipart
+pytest
+httpx

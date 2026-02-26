@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
 from pydantic import BaseModel
-from app.services.code_analyzer import analyze_code
+from backend.app.services.code_analyzer import analyze_code
 
 router=APIRouter()
 
