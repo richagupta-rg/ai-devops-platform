@@ -3,3 +3,6 @@ uvicorn #ASGI server (runs FastAPI)
 python-multipart
 pytest
 httpx
+pytest-cov
+flake8
+black
