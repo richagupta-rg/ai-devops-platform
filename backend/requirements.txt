@@ -6,3 +6,6 @@ httpx
 pytest-cov
 flake8
 black
+sqlalchemy
+psycopg2-binary
+python-dotenv
