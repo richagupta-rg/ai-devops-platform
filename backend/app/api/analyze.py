@@ -4,7 +4,7 @@ from backend.app.services.code_analyzer import analyze_code
 from backend.app.db.database import get_db
 from backend.app.db.models import Analysis
 import json
-
+from backend.app.schemas.analysis import CodeRequest
 
 router = APIRouter()
 
@@ -18,16 +18,32 @@ router = APIRouter()
 
 #     return {"filename": file.filename, "analysis": result}
 
-@router.post("/analyze")
-def analyze(code: str, db: Session = Depends(get_db)):
-    result = analyze_code(code)
+# @router.post("/analyze")
+# def analyze(code: str, db: Session = Depends(get_db)):
+#     result = analyze_code(code)
 
+#     db_entry = Analysis(
+#         code=code,
+#         result=json.dumps(result)
+#     )
+#     db.add(db_entry)
+#     db.commit()
+#     db.refresh(db_entry)
+
+#     return {"result": result}
+
+@router.post("/analyze")
+def analyze(payload: CodeRequest, db: Session=Depends(get_db)):
+    
+    result = analyze_code(payload.code)
+    
     db_entry = Analysis(
-        code=code,
-        result=json.dumps(result)
+        code=payload.code,
+        result=str(result)
     )
+    
     db.add(db_entry)
     db.commit()
     db.refresh(db_entry)
-
+    
     return {"result": result}
