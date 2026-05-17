@@ -5,6 +5,7 @@ from backend.app.db.database import get_db
 from backend.app.db.models import Analysis
 import json
 from backend.app.schemas.analysis import CodeRequest
+from backend.app.core.deps import get_current_user
 
 router = APIRouter()
 
@@ -33,13 +34,18 @@ router = APIRouter()
 #     return {"result": result}
 
 @router.post("/analyze")
-def analyze(payload: CodeRequest, db: Session=Depends(get_db)):
+def analyze(
+    code: str,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
     
-    result = analyze_code(payload.code)
+    result = analyze_code(code)
     
     db_entry = Analysis(
-        code=payload.code,
-        result=str(result)
+        code=code,
+        result=result,
+        username=current_user
     )
     
     db.add(db_entry)
@@ -47,3 +53,14 @@ def analyze(payload: CodeRequest, db: Session=Depends(get_db)):
     db.refresh(db_entry)
     
     return {"result": result}
+
+@router.get("/my-analyses")
+def get_my_analyses(
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    analyses = db.query(Analysis).filter(
+        Analysis.username == current_user
+    ).all()
+
+    return analyses
