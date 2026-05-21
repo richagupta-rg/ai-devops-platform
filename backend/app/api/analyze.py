@@ -41,18 +41,48 @@ def analyze(
 ):
     
     result = analyze_code(code)
-    
+
+    # AI Suggestions
+    suggestions = []
+
+    if result["complexity_score"] > 10:
+        suggestions.append(
+            "Complexity is high. Try simplifying logic."
+        )
+
+    if result["number_of_functions"] == 0:
+        suggestions.append(
+            "Consider organizing code into functions."
+        )
+
+    if result["lines_of_code"] > 50:
+        suggestions.append(
+            "Codebase is large. Consider modularization."
+        )
+
+    suggestions.append(
+        "Follow PEP8 coding standards."
+    )
+
+    suggestions.append(
+        "Add comments for better readability."
+    )
+
+    result["suggestions"] = suggestions
+
     db_entry = Analysis(
         code=code,
         result=result,
         username=current_user
     )
-    
+
     db.add(db_entry)
     db.commit()
     db.refresh(db_entry)
-    
+
     return {"result": result}
+    
+    
 
 @router.get("/my-analyses")
 def get_my_analyses(
